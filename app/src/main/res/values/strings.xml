@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Music Machine</string>
+    <string name="download_text_button">Download</string>
 </resources>
