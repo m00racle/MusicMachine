@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         mDownloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //2:57
+
                 //Inside the OnClick method, let's start with a toast that says downloading.
                 //Make sure to pick the Create a new Toast option,
                 //then hit Enter to move to the text parameter, and write Downloading.
@@ -37,22 +37,12 @@ public class MainActivity extends AppCompatActivity {
                 //And let's use alt + enter to create this method inside our MainActivity class.
                 Toast.makeText(MainActivity.this, "Downloading...", Toast.LENGTH_SHORT).show();
 
-                //in order to maintain responsiveness of the app we need to move the downloadSong() method process into
-                //another thread.
+                //1:37
+                //Lastly, back in MainActivity and our download button's onClick listener,
+                //let's get rid of our runnable object,
+                //And use our new DownloadThread class instead of the normal thread class.
 
-                //first we need to define the process which will be put inside the thread.
-                //we need to use runnable interface implementation here which contains run method where we put the call
-                //to downloadSong() method:
-                Runnable runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        //we put the download song method call here to specify this Runnable implementation will run it:
-                        donwloadSong();
-                    }
-                };
-
-                //next we create a new thread and put the runnable with downloadSong process inside it:
-                Thread thread = new Thread(runnable);
+                DownloadThread thread = new DownloadThread();
 
                 //to differentiate this thread let's give it a name:
                 thread.setName("DownloadThread");
@@ -61,31 +51,5 @@ public class MainActivity extends AppCompatActivity {
                 thread.start();
             }
         });
-    }
-
-    private void donwloadSong() {
-        //3:36
-        //Inside the download song method, ideally, we would download a song, but since downloading can be tricky and
-        // isn't the point of this course, we'll just pretend to download. So instead of downloading a song,
-        // let's just have this method wait ten seconds to simulate about how long it might take to download a song.
-        // An easy way to do this is to add ten seconds to the current time and then run a while loop
-        // until our ten seconds are up.
-        long endTime = System.currentTimeMillis() + 10 * 1000;
-
-        while (System.currentTimeMillis() < endTime){
-            //6:05
-            //Right now it's checking the current time against the end time thousands of times a second and that's a
-            // huge waste of processing power. Instead, inside the body of our while loop, let's wait one second before
-            // looping. We can do this by using the Thread.sleep method. And if we pass on a parameter, that's how many
-            // milliseconds we'll wait, or sleep, before continuing.
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        //6:55
-        //Lastly, let's add a log message to the end of our download song method that says song downloaded.
-        Log.d(TAG, "Song Downloaded: ");
     }
 }
