@@ -36,7 +36,29 @@ public class MainActivity extends AppCompatActivity {
                 //Then, let's make a call to a new method called downloadSong.
                 //And let's use alt + enter to create this method inside our MainActivity class.
                 Toast.makeText(MainActivity.this, "Downloading...", Toast.LENGTH_SHORT).show();
-                donwloadSong();
+
+                //in order to maintain responsiveness of the app we need to move the downloadSong() method process into
+                //another thread.
+
+                //first we need to define the process which will be put inside the thread.
+                //we need to use runnable interface implementation here which contains run method where we put the call
+                //to downloadSong() method:
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        //we put the download song method call here to specify this Runnable implementation will run it:
+                        donwloadSong();
+                    }
+                };
+
+                //next we create a new thread and put the runnable with downloadSong process inside it:
+                Thread thread = new Thread(runnable);
+
+                //to differentiate this thread let's give it a name:
+                thread.setName("DownloadThread");
+
+                //lastly let's execute the thread using start() method:
+                thread.start();
             }
         });
     }
