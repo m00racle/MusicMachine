@@ -1,5 +1,6 @@
 package com.ideproject.mooracle.musicmachine;
 
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,51 +16,55 @@ import android.widget.Toast;
 public class DownloadThread extends Thread {
     private static final String TAG = DownloadThread.class.getSimpleName();
 
+    //0:29
+    //Then, back in our DownloadThread,
+    //
+    //0:32
+    //let's declare a public DownloadHandler field named M handler
+    //
+    //0:45
+    //mHandler.
+
+    DownloadHandler mHandler;
+
     //0:42
     //Then let's override the run method of our new DownloadThread class by
     //hitting Ctrl+O to bring up the override dialog and then selecting the run method.
     //Then instead of calling super.run, let's call our downloadSong method instead.
     @Override
     public void run() {
-        //4:13
-        //The last thing we need to do is call the downloadSong method for
-        //each song in our playlist.
-        for (String song : Playlist.songs) {
-            //1:30
-            //Next, let's call downloadSong instead of super.run.
-            downloadSong();
-        }
-        //add debug message to indicate downloading process thread is finished:
-        Log.d(TAG, "finish downloading all songs in the playlist");
+        //0:47
+        //Then, let's delete everything in the run method and
+        //
+        //0:51
+        //type Looper.prepare,
+        //
+        //0:59
+        //this creates a looper for a thread and also creates the message queue.
+        //
+        //1:05
+        //Next, let's initialize our handler by typing mHandler
+        //
+        //1:10
+        //equals new DownloadHandler.
+        //
+        //1:16
+        //By default, a handler is associated with the looper for the current thread.
+        //
+        //1:20
+        //Since we're in the run method of our DownloadThread, the current thread
+        //
+        //1:26
+        //will be our DownloadThread, instead of the main thread, perfect!
+        //1:31
+        //And once our handler is created, the last step is to call
+        //
+        //1:36
+        //Looper.loop to start looping over the message queue.
 
-        //4:41
-        //Before we test this, let's take a minute to talk about what would happen if we
-        //instead added our loop around the code and our download button's onClick method.
-        //If we looped there, we would create a new thread for
-        //each song, and all the songs would be downloading at the same time.
-        //You'd think this would be great, but by trying to download all the songs at once,
-        //we'd be giving our users a bad experience.
-        //They want to listen to their playlist as soon as possible, and we've only got so
-        //much bandwidth we can use for downloads.
+        Looper.prepare();
+        mHandler = new DownloadHandler();
+        Looper.loop();
     }
 
-    //1:02
-    //Let's cut the method out of MainActivity, And
-    //paste it into the bottom of our DownloadThread class.
-    private void downloadSong() {
-
-        long endTime = System.currentTimeMillis() + 10 * 1000;
-
-        while (System.currentTimeMillis() < endTime){
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        //6:55
-        //Lastly, let's add a log message to the end of our download song method that says song downloaded.
-        Log.d(TAG, "Song Downloaded: ");
-    }
 }
