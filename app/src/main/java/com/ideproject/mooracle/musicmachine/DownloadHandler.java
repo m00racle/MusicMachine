@@ -16,6 +16,7 @@ import android.util.Log;
 
 public class DownloadHandler extends Handler {
     private static final String TAG = DownloadHandler.class.getSimpleName();
+    private DownloadService service;
 
     //6:16
     //The last thing we need to do,
@@ -35,19 +36,69 @@ public class DownloadHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
-        //7:15
-        //instead of calling super.handlemessage.
+        //2:13
+        //Over and download handler and side the handle message
         //
-        //7:19
-        //Let's call downloadSong, and
+        //2:18
+        //method is the call to download song.
         //
-        //7:23
-        //pass in the song attached to our message,
+        //2:25
+        //Once this call is finished, our song has been downloaded.
         //
-        //7:29
-        //msg.obj.toString, to turn it into a string.
+        //2:30
+        //Let's add a line after this call and stop our service.
 
         downloadSong(msg.obj.toString());
+
+        //2:48
+        //Calling stop service, stops the service entirely.
+        //
+        //2:53
+        //If we called stop service after only the first song,
+        //
+        //2:57
+        //we'd be stopping the service before it finished working.
+        //
+        //3:00
+        //Not good.
+        //
+        //3:02
+        //Instead, there's a version of the stop self method that takes an integer When
+        //
+        //3:07
+        //onStartCommand is called, one of the parameters is an integer named startID.
+        //
+        //3:16
+        //Calling stops self and passing in this startID makes sure that we don't
+        //
+        //3:21
+        //stop our service until it has handled all of the startIDs.
+        //
+        //3:26
+        //Okay, so we need to get the startID from onStartCommand and pass it to our handler.
+        //
+        //3:33
+        //Then, when downloading is finished,
+        //
+        //3:36
+        //we need to use the correctonStartCommand and call stopSelf on our service.
+
+        service.stopSelf(msg.arg1);
+        //5:09
+        //The last thing we need to do,
+        //
+        //5:10
+        //is use mService to call stop self at the bottom of handle message.
+        //
+        //5:15
+        //Let's type mService.stopSelf and
+        //
+        //5:20
+        //pass in msg.arg1 to make sure that we only
+        //
+        //5:25
+        //stop the service if it's handled all of our startIDs.
+
     }
 
     private void downloadSong(String song) {
@@ -65,5 +116,14 @@ public class DownloadHandler extends Handler {
 
 
         Log.d(TAG, song + " Downloaded: ");
+    }
+
+    public void setService(DownloadService service) {
+        //4:58
+        //Looks like we've got a field for our service named mService.
+        //
+        //5:04
+        //And we've got a new method called, setService as well.
+        this.service = service;
     }
 }

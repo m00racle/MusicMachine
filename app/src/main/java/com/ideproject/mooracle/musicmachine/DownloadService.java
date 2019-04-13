@@ -28,6 +28,29 @@ public class DownloadService extends Service {
             //it directly it was at least public
         }
         mHandler = thread.mHandler;
+
+        //4:10
+        //Now, we just need to call stop self on our service when our handler's done working.
+        //
+        //4:17
+        //An easy way to do this would be to just pass a reference to our service to
+        //
+        //4:22
+        //our handler.
+        //
+        //4:23
+        //And the bottom of the OnCreate Let's type
+        //
+        //4:29
+        //mhandler.setService.
+        //
+        //4:35
+        //And pass in the keyword this to pass in our service.
+        //
+        //4:40
+        //Then let's use Alt Enter to create a setter.
+
+        mHandler.setService(this);
     }
 
     @Override
@@ -39,6 +62,24 @@ public class DownloadService extends Service {
         //now we just sent the song to the mHandler as message
         Message message = Message.obtain();
         message.obj = song;
+
+        //3:42
+        //Back in download service, right above where we send our message,
+        //
+        //3:47
+        //let's attach the startID to our message using one of the argument properties.
+        //
+        //3:53
+        //Each message object has two integer properties named arg1 and
+        //
+        //3:59
+        //arg2, which we can use for passing arguments.
+        //
+        //4:04
+        //Let's set arg1 Equal to startId.
+        message.arg1 = startId;
+
+
         mHandler.sendMessage(message);
 
         //return the service to start redeliver intent
