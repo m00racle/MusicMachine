@@ -47,45 +47,11 @@ public class DownloadHandler extends Handler {
         //7:29
         //msg.obj.toString, to turn it into a string.
 
-        downloadSong(msg.obj.toString());
+        //downloadSong(msg.obj.toString());
+        // this was commented out since the method was moved to DownloadService class
     }
 
-    //6:40
-    //And once we've done that, all we need to do is call our download
-    //
-    //6:45
-    //song method with the song name supplied by our message.
-    //
-    //6:51
-    //Let's cut the download song method out of our DownloadThread and
-    //
-    //6:59
-    //paste it into our DownloadHandler.
-    //
-    //7:06
-    //Then let's quickly update the tag constant Alt+Enter,
-    //
-    //7:11
-    //downloadhandler.class.get simple name and
 
-    private void downloadSong(String song) {
 
-        long endTime = System.currentTimeMillis() + 10 * 1000;
 
-        while (System.currentTimeMillis() < endTime){
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        //7:37
-        //Lastly, let's update the download song method to take in a song, String song.
-        //
-        //7:45
-        //And let's change the log message to include the song name.
-
-        Log.d(TAG, song + " Downloaded: ");
-    }
 }
