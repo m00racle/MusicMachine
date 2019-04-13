@@ -47,11 +47,23 @@ public class DownloadHandler extends Handler {
         //7:29
         //msg.obj.toString, to turn it into a string.
 
-        //downloadSong(msg.obj.toString());
-        // this was commented out since the method was moved to DownloadService class
+        downloadSong(msg.obj.toString());
     }
 
+    private void downloadSong(String song) {
+
+        long endTime = System.currentTimeMillis() + 10 * 1000;
+
+        while (System.currentTimeMillis() < endTime){
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
 
-
+        Log.d(TAG, song + " Downloaded: ");
+    }
 }
