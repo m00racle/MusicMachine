@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 for (String song : Playlist.songs){
                    //this was deleted since we want to use service in DownloadService rather than handler
                     //to use service we must use intent just like we invoke activity
-                    Intent intent = new Intent(MainActivity.this, DownloadService.class);
+                    Intent intent = new Intent(MainActivity.this, DownloadIntentService.class);
                     intent.putExtra(KEY_SONG, song); //<- put song name as extra to be extracted later
                     //lastly start the service
                     startService(intent);
