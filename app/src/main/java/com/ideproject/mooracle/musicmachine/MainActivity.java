@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     //declare our button as a field at the top of our class.
     //Let's call it mDownloadButton.
     private Button mDownloadButton;
+    private Button mPlayerButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mDownloadButton = findViewById(R.id.downloadButton);
+        mPlayerButton = findViewById(R.id.playerButton);
 
         //this was deleted since we use service now rather than thread handler to download the songs
 
@@ -52,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
                     //lastly start the service
                     startService(intent);
                 }
+            }
+        });
+
+        mPlayerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
