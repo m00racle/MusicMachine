@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             mBound = true;
             //check if the music is playing or not and set play button text accordingly:
             if (mPlayerService.isPlaying()){
-                mPlayerButton.setText("pause");//todo: set this to string resource
+                mPlayerButton.setText(R.string.player_text_pause);//: set this to string resource
             }
         }
 
@@ -83,10 +83,13 @@ public class MainActivity extends AppCompatActivity {
                     if (mPlayerService.isPlaying()){
                         //pause the music and switch the button to pause
                         mPlayerService.pause();
-                        mPlayerButton.setText("play");//todo: fix this to make string resource
+                        mPlayerButton.setText(R.string.player_text_button);//: fix this to make string resource
                     } else {
+                        //: create intent to start the service not just bound
+                        Intent intent = new Intent(MainActivity.this, PlayerService.class);
+                        startService(intent);
                         mPlayerService.play();
-                        mPlayerButton.setText("pause");//todo: fix this to make string resource
+                        mPlayerButton.setText(R.string.player_text_pause);//: fix this to make string resource
                     }
                 }
             }

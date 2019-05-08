@@ -2,4 +2,5 @@
     <string name="app_name">Music Machine</string>
     <string name="download_text_button">Download</string>
     <string name="player_text_button">play</string>
+    <string name="player_text_pause">pause</string>
 </resources>

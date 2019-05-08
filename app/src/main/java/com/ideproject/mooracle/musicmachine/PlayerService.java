@@ -22,6 +22,18 @@ public class PlayerService extends Service {
         mPlayer = MediaPlayer.create(this, R.raw.jingle);
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                //: call stop self to stop all service and destroy once the task completed
+                stopSelf();
+            }
+        });
+        return Service.START_NOT_STICKY;
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
