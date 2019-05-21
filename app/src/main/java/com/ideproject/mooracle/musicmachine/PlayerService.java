@@ -5,12 +5,18 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.Messenger;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 public class PlayerService extends Service {
 
-    private final IBinder binder = new LocalBinder();
+    //since we already separate process from Service and Activity we need to create Messenger to communicate
+    //between them:
+    //The Messenger will require us to add binder or handler we choose the later by instantiating PlayerHandler object
+    //then use this to reference the handler to the instance of this class PlayerService
+
+    Messenger messenger = new Messenger(new PlayerHandler(this));
 
     private MediaPlayer mPlayer;
     private static final String TAG = PlayerService.class.getSimpleName();
@@ -38,7 +44,7 @@ public class PlayerService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "onBind");
-        return binder;
+        return messenger.getBinder();
     }
 
     @Override
@@ -53,12 +59,6 @@ public class PlayerService extends Service {
         mPlayer.release(); // this will stop the mPlayer
     }
 
-    public class LocalBinder extends Binder {
-        //build a method to get service after binding:
-        public PlayerService getService(){
-            return PlayerService.this;
-        }
-    }
 
     //we need to make two client methods one for playing and one for pausing
     public void play(){
