@@ -40,6 +40,15 @@ public class PlayerHandler extends Handler {
                 //create new message add the isPlaying as arg1 and replyTo msg
                 Message message = Message.obtain();
                 message.arg1 = isPlaying;
+                if (msg.arg2 == 1){
+                    //if the incoming message arg2 = 1 then return back 1 as arg2 through our message:
+                    message.arg2 = 1;
+                }
+                message.replyTo = playerService.messenger;
+                //note: this replyTo require the messenger field on the playerService instance to be public
+                //this will set the reply directly from the message from activity thus make it easier for our
+                //code to run.
+
                 try {
                     msg.replyTo.send(message);
                 } catch (RemoteException e) {

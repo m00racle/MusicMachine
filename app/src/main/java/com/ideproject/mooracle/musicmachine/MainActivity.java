@@ -4,19 +4,20 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.IBinder;
+import android.os.*;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private PlayerService mPlayerService;
+
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String KEY_SONG = "song";
     private boolean mBound = false; // this will track the connection is bound or not
+    private Messenger serviceMessenger;
+    private Messenger activityMessenger = new Messenger(new ActivityHandler(this));
 
     private Button mDownloadButton;
     private Button mPlayerButton;
@@ -25,12 +26,23 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
-            PlayerService.LocalBinder mBinder = (PlayerService.LocalBinder) binder;
-            mPlayerService = mBinder.getService();
+            //in onServiceConnected we need to make sure to ask if the player is play or paused
+            //thus we need a serviceMessenger to ask the question to PlayerService
+            //this serviceMessenger use binder instead of handler to check for the first time it binds.
+            //then we need to set another messenger (activityMessenger) as replyTo messenger.
+            //activityMessenger use handler instead of binder since it will be handled by ActivityHandler instance
+            //thus we need to define it in field definition
+
             mBound = true;
-            //check if the music is playing or not and set play button text accordingly:
-            if (mPlayerService.isPlaying()){
-                mPlayerButton.setText(R.string.player_text_pause);//: set this to string resource
+            serviceMessenger = new Messenger(binder);
+            Message message = Message.obtain();
+            message.arg1 = 2; //ask if play or not
+            message.arg2 = 1; // arg2=1 means this is the first time connected do not change the play status!
+            message.replyTo = activityMessenger;
+            try {
+                serviceMessenger.send(message);
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
 
@@ -79,21 +91,25 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //check if it was bound
                 if (mBound){
-                    //check if the song is playing?
-                    if (mPlayerService.isPlaying()){
-                        //pause the music and switch the button to pause
-                        mPlayerService.pause();
-                        mPlayerButton.setText(R.string.player_text_button);//: fix this to make string resource
-                    } else {
-                        //: create intent to start the service not just bound
-                        Intent intent = new Intent(MainActivity.this, PlayerService.class);
-                        startService(intent);
-                        mPlayerService.play();
-                        mPlayerButton.setText(R.string.player_text_pause);//: fix this to make string resource
+
+                    Intent intent = new Intent(MainActivity.this, PlayerService.class);
+                    startService(intent);
+
+                    Message message = Message.obtain();
+                    message.arg1 = 2; //ask if play or not
+                    message.replyTo = activityMessenger;
+                    try {
+                        serviceMessenger.send(message);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
                 }
             }
         });
+    }
+
+    public void setPlayerButtonText(String text){
+        mPlayerButton.setText(text);
     }
 
     @Override

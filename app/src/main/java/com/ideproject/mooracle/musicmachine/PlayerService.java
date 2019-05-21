@@ -3,9 +3,7 @@ package com.ideproject.mooracle.musicmachine;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Binder;
-import android.os.IBinder;
-import android.os.Messenger;
+import android.os.*;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -16,7 +14,7 @@ public class PlayerService extends Service {
     //The Messenger will require us to add binder or handler we choose the later by instantiating PlayerHandler object
     //then use this to reference the handler to the instance of this class PlayerService
 
-    Messenger messenger = new Messenger(new PlayerHandler(this));
+    public Messenger messenger = new Messenger(new PlayerHandler(this));
 
     private MediaPlayer mPlayer;
     private static final String TAG = PlayerService.class.getSimpleName();
@@ -34,6 +32,7 @@ public class PlayerService extends Service {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 //: call stop self to stop all service and destroy once the task completed
+
                 stopSelf();
             }
         });
