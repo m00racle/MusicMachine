@@ -6,12 +6,24 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.*;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import com.ideproject.mooracle.musicmachine.adapters.PlaylistAdapter;
+import com.ideproject.mooracle.musicmachine.models.Song;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    public static final String EXTRA_SONG = "com.mooracle.intent.action.EXTRA_SONG";
+    public static final String EXTRA_LIST_POSITION = "com.mooracle.intent.action.EXTRA_LIST_POS";
+
+    public static final int REQUEST_FAVORITE = 0;//TODO: for revision!!
+    public static final String EXTRA_FAVORITE = "com.mooracle.intent.action.EXTRA_FAVORITE";
+
+    private PlaylistAdapter adapter;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final String KEY_SONG = "song";
@@ -75,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                for (String song : Playlist.songs){
+                for (Song song : Playlist.songs){
                    //this was deleted since we want to use service in DownloadService rather than handler
                     //to use service we must use intent just like we invoke activity
                     Intent intent = new Intent(MainActivity.this, DownloadIntentService.class);
@@ -106,6 +118,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        adapter = new PlaylistAdapter(Playlist.songs, this);
+        recyclerView.setAdapter(adapter);
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
     }
 
     public void setPlayerButtonText(String text){
