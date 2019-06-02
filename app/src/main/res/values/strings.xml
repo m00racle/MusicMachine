@@ -3,4 +3,6 @@
     <string name="download_text_button">Download</string>
     <string name="player_text_button">play</string>
     <string name="player_text_pause">pause</string>
+    <string name="favorite_checkBox_text">Favorite?</string>
+    <string name="song_image_desc">Image on top of song</string>
 </resources>
