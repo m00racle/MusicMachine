@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void testIntents() {
         Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(EXTRA_SONG, "Gradle, Gradle, Gradle");
         startActivity(intent);
     }
 

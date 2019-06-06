@@ -17,6 +17,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private RelativeLayout rootLayout;
     private Song song;
+    private String songTitle;
 
 
     @Override
@@ -29,15 +30,18 @@ public class DetailActivity extends AppCompatActivity {
         rootLayout = (RelativeLayout)findViewById(R.id.rootLayout);
 
         Intent intent = getIntent();
+        if ((songTitle = intent.getStringExtra(MainActivity.EXTRA_SONG)) != null){
+            titleLabel.setText(songTitle);
+        }
 
-        if (intent.getAction() == Intent.ACTION_SEND) {
+        /*if (intent.getAction() == Intent.ACTION_SEND) {
             handleSendIntent(intent);
         }
         else {
             if (intent.getParcelableExtra(MainActivity.EXTRA_SONG) != null) {
-                song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
-                titleLabel.setText(song.getTitle());
-                favoriteCheckbox.setChecked(song.isFavorite());
+                //song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
+               //todo:(yan)this needs repair
+                //favoriteCheckbox.setChecked(song.isFavorite());
             }
             final int listPosition = intent.getIntExtra(MainActivity.EXTRA_LIST_POSITION, 0);
 
@@ -56,7 +60,7 @@ public class DetailActivity extends AppCompatActivity {
                     finish();
                 }
             });
-        }
+        }*/
     }
 
     @Override
