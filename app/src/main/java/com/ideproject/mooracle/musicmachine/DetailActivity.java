@@ -35,7 +35,7 @@ public class DetailActivity extends AppCompatActivity {
         }
         else {
             if (intent.getParcelableExtra(MainActivity.EXTRA_SONG) != null) {
-                song = (Song)intent.getParcelableExtra(MainActivity.EXTRA_SONG);
+                song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
                 titleLabel.setText(song.getTitle());
                 favoriteCheckbox.setChecked(song.isFavorite());
             }
