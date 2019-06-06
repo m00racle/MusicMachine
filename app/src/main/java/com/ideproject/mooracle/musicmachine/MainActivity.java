@@ -85,16 +85,8 @@ public class MainActivity extends AppCompatActivity {
                 //And let's use alt + enter to create this method inside our MainActivity class.
                 Toast.makeText(MainActivity.this, "Downloading...", Toast.LENGTH_SHORT).show();
 
-
-
-                for (Song song : Playlist.songs){
-                   //this was deleted since we want to use service in DownloadService rather than handler
-                    //to use service we must use intent just like we invoke activity
-                    Intent intent = new Intent(MainActivity.this, DownloadIntentService.class);
-                    intent.putExtra(KEY_SONG, song); //<- put song name as extra to be extracted later
-                    //lastly start the service
-                    startService(intent);
-                }
+                testIntents();
+                //downloadSongs();
             }
         });
 
@@ -126,6 +118,22 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
+    }
+
+    private void testIntents() {
+        Intent intent = new Intent(this, DetailActivity.class);
+        startActivity(intent);
+    }
+
+    private void downloadSongs() {
+        for (Song song : Playlist.songs){
+           //this was deleted since we want to use service in DownloadService rather than handler
+            //to use service we must use intent just like we invoke activity
+            Intent intent = new Intent(MainActivity.this, DownloadIntentService.class);
+            intent.putExtra(KEY_SONG, song); //<- put song name as extra to be extracted later
+            //lastly start the service
+            startService(intent);
+        }
     }
 
     public void setPlayerButtonText(String text){
