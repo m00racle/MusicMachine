@@ -30,9 +30,18 @@ public class DetailActivity extends AppCompatActivity {
         rootLayout = (RelativeLayout)findViewById(R.id.rootLayout);
 
         Intent intent = getIntent();
-        if ((songTitle = intent.getStringExtra(MainActivity.EXTRA_SONG)) != null){
-            titleLabel.setText(songTitle);
+//        if ((songTitle = intent.getStringExtra(MainActivity.EXTRA_SONG)) != null){
+//            titleLabel.setText(songTitle);
+//        }
+
+        if (intent.getParcelableExtra(MainActivity.EXTRA_SONG) != null){
+            Song song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
+            titleLabel.setText(song.getTitle());
+            favoriteCheckbox.setChecked(song.isFavorite());
         }
+
+        //get the list position of the song:
+        final int listPosition = intent.getIntExtra(MainActivity.EXTRA_LIST_POSITION, 0);
 
         //handling the checkboxes
         favoriteCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -41,6 +50,8 @@ public class DetailActivity extends AppCompatActivity {
                 //send boolean isChecked:
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra(MainActivity.EXTRA_FAVORITE, isChecked);
+                //send the list position back to main activity
+                resultIntent.putExtra(MainActivity.EXTRA_LIST_POSITION, listPosition);
                 setResult(RESULT_OK, resultIntent);
                 finish();
             }

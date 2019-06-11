@@ -168,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
                 // handles the result
                 boolean result = data.getBooleanExtra(EXTRA_FAVORITE, false);
                 Log.d(TAG, "onActivityResult: isFavorite?" + result);
+                int position = data.getIntExtra(EXTRA_LIST_POSITION, 0);
+                //update the favorite status directly from data to match and notify adapter of changes
+                Playlist.songs[position].setFavorite(result);
+                adapter.notifyItemChanged(position);
             }
         }
     }
