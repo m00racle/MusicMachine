@@ -34,6 +34,18 @@ public class DetailActivity extends AppCompatActivity {
             titleLabel.setText(songTitle);
         }
 
+        //handling the checkboxes
+        favoriteCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //send boolean isChecked:
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(MainActivity.EXTRA_FAVORITE, isChecked);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
+        });
+
         /*if (intent.getAction() == Intent.ACTION_SEND) {
             handleSendIntent(intent);
         }

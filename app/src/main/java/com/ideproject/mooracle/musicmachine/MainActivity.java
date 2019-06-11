@@ -8,6 +8,7 @@ import android.os.*;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
     private void testIntents() {
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(EXTRA_SONG, "Gradle, Gradle, Gradle");
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_FAVORITE);
     }
 
     private void downloadSongs() {
@@ -156,6 +157,18 @@ public class MainActivity extends AppCompatActivity {
             mBound = false;
             //note: unbinding service will not change the mBound since onDisconnected only called in
             //extraordinary circumstances. Thus this class itself need to change mBound value.
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_FAVORITE) {
+            if (resultCode == RESULT_OK){
+                // handles the result
+                boolean result = data.getBooleanExtra(EXTRA_FAVORITE, false);
+                Log.d(TAG, "onActivityResult: isFavorite?" + result);
+            }
         }
     }
 }
