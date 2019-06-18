@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.*;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -122,9 +123,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void testIntents() {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(EXTRA_SONG, "Gradle, Gradle, Gradle");
-        startActivityForResult(intent, REQUEST_FAVORITE);
+        //Explicit Intent
+//        Intent intent = new Intent(this, DetailActivity.class);
+//        intent.putExtra(EXTRA_SONG, "Gradle, Gradle, Gradle");
+//        startActivityForResult(intent, REQUEST_FAVORITE);
+
+        //Implicit intent:
+        Intent intent = new Intent((Intent.ACTION_VIEW));
+        Uri geoLocation = Uri.parse("geo:0,0?q=-7.722552, 110.309338(Lestari)");
+        intent.setData(geoLocation);
+        startActivity(intent);
     }
 
     private void downloadSongs() {
