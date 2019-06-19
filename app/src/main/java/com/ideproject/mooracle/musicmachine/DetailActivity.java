@@ -25,9 +25,9 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        TextView titleLabel = (TextView)findViewById(R.id.songTitleLabel);
-        final CheckBox favoriteCheckbox = (CheckBox)findViewById(R.id.checkBox);
-        rootLayout = (RelativeLayout)findViewById(R.id.rootLayout);
+        TextView titleLabel = findViewById(R.id.songTitleLabel);
+        final CheckBox favoriteCheckbox = findViewById(R.id.checkBox);
+        rootLayout = findViewById(R.id.rootLayout);
 
         Intent intent = getIntent();
 //        if ((songTitle = intent.getStringExtra(MainActivity.EXTRA_SONG)) != null){
@@ -57,7 +57,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        /*if (intent.getAction() == Intent.ACTION_SEND) {
+        if (intent.getAction() == Intent.ACTION_SEND) {
             handleSendIntent(intent);
         }
         else {
@@ -66,7 +66,7 @@ public class DetailActivity extends AppCompatActivity {
                //todo:(yan)this needs repair
                 //favoriteCheckbox.setChecked(song.isFavorite());
             }
-            final int listPosition = intent.getIntExtra(MainActivity.EXTRA_LIST_POSITION, 0);
+            //final int listPosition = intent.getIntExtra(MainActivity.EXTRA_LIST_POSITION, 0);
 
             //        if (intent.getStringExtra(MainActivity.EXTRA_TITLE) != null) {
             //            String songTitle = intent.getStringExtra(MainActivity.EXTRA_TITLE);
@@ -83,7 +83,7 @@ public class DetailActivity extends AppCompatActivity {
                     finish();
                 }
             });
-        }*/
+        }
     }
 
     @Override
