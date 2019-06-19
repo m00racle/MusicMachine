@@ -30,54 +30,33 @@ public class DetailActivity extends AppCompatActivity {
         rootLayout = findViewById(R.id.rootLayout);
 
         Intent intent = getIntent();
-//        if ((songTitle = intent.getStringExtra(MainActivity.EXTRA_SONG)) != null){
-//            titleLabel.setText(songTitle);
-//        }
 
-        if (intent.getParcelableExtra(MainActivity.EXTRA_SONG) != null){
-            Song song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
-            titleLabel.setText(song.getTitle());
-            favoriteCheckbox.setChecked(song.isFavorite());
-        }
 
-        //get the list position of the song:
-        final int listPosition = intent.getIntExtra(MainActivity.EXTRA_LIST_POSITION, 0);
-
-        //handling the checkboxes
-        favoriteCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //send boolean isChecked:
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(MainActivity.EXTRA_FAVORITE, isChecked);
-                //send the list position back to main activity
-                resultIntent.putExtra(MainActivity.EXTRA_LIST_POSITION, listPosition);
-                setResult(RESULT_OK, resultIntent);
-                finish();
-            }
-        });
-
-        if (intent.getAction() == Intent.ACTION_SEND) {
+        if (Intent.ACTION_SEND.equals(intent.getAction())) { //to avoid null pointer exception!!
             handleSendIntent(intent);
         }
         else {
-            if (intent.getParcelableExtra(MainActivity.EXTRA_SONG) != null) {
-                //song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
-               //todo:(yan)this needs repair
-                //favoriteCheckbox.setChecked(song.isFavorite());
+            //        if ((songTitle = intent.getStringExtra(MainActivity.EXTRA_SONG)) != null){
+//            titleLabel.setText(songTitle);
+//        }
+
+            if (intent.getParcelableExtra(MainActivity.EXTRA_SONG) != null){
+                Song song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
+                titleLabel.setText(song.getTitle());
+                favoriteCheckbox.setChecked(song.isFavorite());
             }
-            //final int listPosition = intent.getIntExtra(MainActivity.EXTRA_LIST_POSITION, 0);
 
-            //        if (intent.getStringExtra(MainActivity.EXTRA_TITLE) != null) {
-            //            String songTitle = intent.getStringExtra(MainActivity.EXTRA_TITLE);
-            //            titleLabel.setText(songTitle);
-            //        }
+            //get the list position of the song:
+            final int listPosition = intent.getIntExtra(MainActivity.EXTRA_LIST_POSITION, 0);
 
+            //handling the checkboxes
             favoriteCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    //send boolean isChecked:
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra(MainActivity.EXTRA_FAVORITE, isChecked);
+                    //send the list position back to main activity
                     resultIntent.putExtra(MainActivity.EXTRA_LIST_POSITION, listPosition);
                     setResult(RESULT_OK, resultIntent);
                     finish();
@@ -95,6 +74,7 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //this already written in the beginning of GitHub prep:
         int itemId = item.getItemId();
 
         if (itemId == R.id.action_share) {
