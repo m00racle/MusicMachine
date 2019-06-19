@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.*;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mDownloadButton;
     private Button mPlayerButton;
+    private ConstraintLayout constraintLayout;
 
     //build anonymous class for service connection:
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -73,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
         mDownloadButton = findViewById(R.id.downloadButton);
         mPlayerButton = findViewById(R.id.playerButton);
+        //initiate constraint layout
+        constraintLayout = findViewById(R.id.relativeLayout);
+        //please ignore the naming of relative layout since it was originally relative
 
         //this was deleted since we use service now rather than thread handler to download the songs
 
@@ -132,7 +138,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent((Intent.ACTION_VIEW));
         Uri geoLocation = Uri.parse("geo:0,0?q=-7.722552, 110.309338(Lestari)");
         intent.setData(geoLocation);
-        startActivity(intent);
+        //checking if there is app that can handle the request from the implicit intent:
+        if (intent.resolveActivity(getPackageManager()) == null){
+            //let's just put snack bar at the moment
+            Snackbar.make(constraintLayout, "Sorry there is no apps which can handle the request",
+                    Snackbar.LENGTH_LONG).show();
+        }else {
+            startActivity(intent);
+        }
     }
 
     private void downloadSongs() {
