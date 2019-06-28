@@ -1,9 +1,6 @@
 package com.ideproject.mooracle.musicmachine;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.net.Uri;
 import android.os.*;
 import android.support.constraint.ConstraintLayout;
@@ -81,6 +78,15 @@ public class MainActivity extends AppCompatActivity {
         //please ignore the naming of relative layout since it was originally relative
 
         //this was deleted since we use service now rather than thread handler to download the songs
+
+        //this code is added to substitute the manifest broadcast receiver since it was already deprecated
+        //the broadcast receiver is context abstract class thus can be directly from context mainActivity
+        //we can use this
+        // first we need to instantiate intent filter and specify the filter in the manifest here:
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+
+        //we use the intentFilter as part of registerReceiver and pass new instance of NetworkConnectionReceiver class
+        this.registerReceiver(new NetworkConnectionReceiver(), intentFilter);
 
         mDownloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
