@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mDownloadButton;
     private Button mPlayerButton;
     private ConstraintLayout constraintLayout;
+    private NetworkConnectionReceiver receiver = new NetworkConnectionReceiver();
 
     //build anonymous class for service connection:
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,15 +80,6 @@ public class MainActivity extends AppCompatActivity {
         //please ignore the naming of relative layout since it was originally relative
 
         //this was deleted since we use service now rather than thread handler to download the songs
-
-        //this code is added to substitute the manifest broadcast receiver since it was already deprecated
-        //the broadcast receiver is context abstract class thus can be directly from context mainActivity
-        //we can use this
-        // first we need to instantiate intent filter and specify the filter in the manifest here:
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-
-        //we use the intentFilter as part of registerReceiver and pass new instance of NetworkConnectionReceiver class
-        this.registerReceiver(new NetworkConnectionReceiver(), intentFilter);
 
         mDownloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +167,29 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Intent intent = new Intent(this, PlayerService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //make log that it was on Resume
+        Log.i(TAG, "App is on the foreground");
+        //this code is added to substitute the manifest broadcast receiver since it was already deprecated
+        //the broadcast receiver is context abstract class thus can be directly from context mainActivity
+        //we can use this
+        //WARNING: this is different from the course video since the new abstract class register receiver is part
+        //of the context now, thus it needs to register as this
+        // first we need to instantiate intent filter and specify the filter in the manifest here:
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        this.registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "App is in Background");
+        //unregister receiver when it was on the background:
+        this.unregisterReceiver(receiver);
     }
 
     @Override
