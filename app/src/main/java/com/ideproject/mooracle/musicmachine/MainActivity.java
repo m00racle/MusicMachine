@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.*;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -64,6 +65,19 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mBound = false;
+        }
+    };
+    private BroadcastReceiver localReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //extract the boolean data from the broadcast
+            boolean isConnected = intent.getBooleanExtra(NetworkConnectionReceiver.EXTRA_IS_CONNECTED, false);
+
+            if (isConnected) {
+                Snackbar.make(constraintLayout, "Network is connected", Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(constraintLayout, "Network is disconnected", Snackbar.LENGTH_LONG).show();
+            }
         }
     };
 
@@ -182,6 +196,10 @@ public class MainActivity extends AppCompatActivity {
         // first we need to instantiate intent filter and specify the filter in the manifest here:
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         this.registerReceiver(receiver, intentFilter);
+
+        //create another intent filter for custom intent broadcasr
+        IntentFilter customFilter = new IntentFilter(NetworkConnectionReceiver.NOTIFY_NETWORK_CHANGES);
+        LocalBroadcastManager.getInstance(this).registerReceiver(localReceiver, customFilter);
     }
 
     @Override
