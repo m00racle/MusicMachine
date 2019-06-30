@@ -1,13 +1,11 @@
 package com.ideproject.mooracle.musicmachine;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
 import android.net.Uri;
 import android.os.*;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mDownloadButton;
     private Button mPlayerButton;
     private ConstraintLayout constraintLayout;
+    private NetworkConnectionReceiver receiver = new NetworkConnectionReceiver();
 
     //build anonymous class for service connection:
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -68,6 +67,20 @@ public class MainActivity extends AppCompatActivity {
             mBound = false;
         }
     };
+    private BroadcastReceiver localReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //extract the boolean data from the broadcast
+            boolean isConnected = intent.getBooleanExtra(NetworkConnectionReceiver.EXTRA_IS_CONNECTED, false);
+
+            if (isConnected) {
+                Snackbar.make(constraintLayout, "Network is connected", Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(constraintLayout, "Network is disconnected", Snackbar.LENGTH_LONG).show();
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
                     Message message = Message.obtain();
                     message.arg1 = 2; //ask if play or not
                     message.replyTo = activityMessenger;
+                    //Note this message.replyTo is important to get the messenger (the same messenger as the one sent
+                    //here) to be sent back to notify when the song is done playing
+                    //without this we cannot access the same messenger as this since it cannot be public static!!
                     try {
                         serviceMessenger.send(message);
                     } catch (RemoteException e) {
@@ -168,6 +184,33 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Intent intent = new Intent(this, PlayerService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //make log that it was on Resume
+        Log.i(TAG, "App is on the foreground");
+        //this code is added to substitute the manifest broadcast receiver since it was already deprecated
+        //the broadcast receiver is context abstract class thus can be directly from context mainActivity
+        //we can use this
+        //WARNING: this is different from the course video since the new abstract class register receiver is part
+        //of the context now, thus it needs to register as this
+        // first we need to instantiate intent filter and specify the filter in the manifest here:
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        this.registerReceiver(receiver, intentFilter);
+
+        //create another intent filter for custom intent broadcasr
+        IntentFilter customFilter = new IntentFilter(NetworkConnectionReceiver.NOTIFY_NETWORK_CHANGES);
+        LocalBroadcastManager.getInstance(this).registerReceiver(localReceiver, customFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "App is in Background");
+        //unregister receiver when it was on the background:
+        this.unregisterReceiver(receiver);
     }
 
     @Override

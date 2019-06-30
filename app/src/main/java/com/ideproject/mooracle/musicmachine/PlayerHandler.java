@@ -3,6 +3,9 @@ package com.ideproject.mooracle.musicmachine;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.widget.Toast;
 
 /**
  * This is the handler to handle message communicating between MainActivity and PlayerService
@@ -23,6 +26,12 @@ public class PlayerHandler extends Handler {
 
     @Override
     public void handleMessage(Message msg) {
+        if (msg.replyTo != null) {
+            //this should determine where the activityMessenger to be sent to:
+            //remember when it was binding in the first place the msg.replyTo referred to ActivityHandler instance
+            Log.d(PlayerHandler.class.getSimpleName(), "handleMessage: " + msg.replyTo);
+            playerService.activityMessenger = msg.replyTo;
+        }
         //we assume that the message from the activity will contain 0, 1, or 2
         //0 for command to play, 1 to pause and 2 to ask isPlaying
         switch (msg.arg1){
