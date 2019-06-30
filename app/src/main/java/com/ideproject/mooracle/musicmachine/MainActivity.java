@@ -123,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
                     Message message = Message.obtain();
                     message.arg1 = 2; //ask if play or not
                     message.replyTo = activityMessenger;
+                    //Note this message.replyTo is important to get the messenger (the same messenger as the one sent
+                    //here) to be sent back to notify when the song is done playing
+                    //without this we cannot access the same messenger as this since it cannot be public static!!
                     try {
                         serviceMessenger.send(message);
                     } catch (RemoteException e) {

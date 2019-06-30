@@ -58,6 +58,8 @@ public class ActivityHandler extends Handler {
                 //Change the play button text to "Play"
                 mainActivity.setPlayerButtonText("Play");
             }
+        } else if (msg.arg1 == 3) {
+            mainActivity.setPlayerButtonText("Play");
         }
     }
 }

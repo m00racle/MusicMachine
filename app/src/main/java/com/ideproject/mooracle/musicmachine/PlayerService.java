@@ -8,10 +8,13 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.*;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 public class PlayerService extends Service {
     private static final String CHANNEL_ID = "ChannelMusic";
+    public static final String NOTIFY_SONG_ENDS = "NOTIFY_SONG_ENDS";
+    public static final String EXTRA_SONG_ENDS = "EXTRA_SONG_ENDS";
 
     //since we already separate process from Service and Activity we need to create Messenger to communicate
     //between them:
@@ -19,6 +22,7 @@ public class PlayerService extends Service {
     //then use this to reference the handler to the instance of this class PlayerService
 
     public Messenger messenger = new Messenger(new PlayerHandler(this));
+    public Messenger activityMessenger;
 
     private MediaPlayer mPlayer;
     private static final String TAG = PlayerService.class.getSimpleName();
@@ -37,7 +41,7 @@ public class PlayerService extends Service {
         //creating a notification
         //NOTE: since the Notification.Builder(context) is deprecated we need to change it to second form please refer
         //to the documentation about Notification.
-        //Also this buider requires min SDK of 26 thus I need to change the gradle for app:
+        //Also this builder requires min SDK of 26 thus I need to change the gradle for app:
 
         Notification.Builder notificationBuilder = new Notification.Builder(this, CHANNEL_ID);
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
@@ -51,13 +55,18 @@ public class PlayerService extends Service {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 //: call stop self to stop all service and destroy once the task completed
-                Log.d(TAG, "media player complete");
-                //todo: bring back message to the activity to change the play button text to "Play"
-
                 stopSelf();
 
                 //after the player finished remove notification:
                 stopForeground(true);
+
+                //send message back to Activity handler to inform that the song is done playing thus change the
+                //mPlayerButton to "Play"
+                Message message = Message.obtain();
+                message.arg1 = 3;
+                try {
+                    activityMessenger.send(message);
+                } catch (Exception e) {}
             }
         });
         return Service.START_NOT_STICKY;
