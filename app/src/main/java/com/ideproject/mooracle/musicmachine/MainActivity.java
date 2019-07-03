@@ -106,8 +106,8 @@ public class MainActivity extends AppCompatActivity {
                 //And let's use alt + enter to create this method inside our MainActivity class.
                 Toast.makeText(MainActivity.this, "Downloading...", Toast.LENGTH_SHORT).show();
 
-                testIntents();
-                //downloadSongs();
+                //testIntents();
+                downloadSongs();
             }
         });
 
@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
                 if (mBound){
 
                     Intent intent = new Intent(MainActivity.this, PlayerService.class);
+                    //send the song object to the PlayerService
+                    intent.putExtra(EXTRA_SONG, Playlist.songs[0]);
                     startService(intent);
 
                     Message message = Message.obtain();
@@ -165,13 +167,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void downloadSongs() {
+        //int index = 0;
         for (Song song : Playlist.songs){
-           //this was deleted since we want to use service in DownloadService rather than handler
-            //to use service we must use intent just like we invoke activity
+
+
             Intent intent = new Intent(MainActivity.this, DownloadIntentService.class);
             intent.putExtra(KEY_SONG, song); //<- put song name as extra to be extracted later
+            //intent.putExtra(EXTRA_LIST_POSITION, index);
             //lastly start the service
             startService(intent);
+            //index += 1;
         }
     }
 

@@ -29,6 +29,7 @@ public class DetailActivity extends AppCompatActivity {
         final CheckBox favoriteCheckbox = findViewById(R.id.checkBox);
         rootLayout = findViewById(R.id.rootLayout);
 
+        //todo: BUG If we choose to access this using local notification it never direct to the correct detail page
         Intent intent = getIntent();
 
 
