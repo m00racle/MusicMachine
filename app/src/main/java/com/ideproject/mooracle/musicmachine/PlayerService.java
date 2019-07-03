@@ -10,11 +10,10 @@ import android.os.*;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import com.ideproject.mooracle.musicmachine.models.Song;
 
 public class PlayerService extends Service {
     private static final String CHANNEL_ID = "ChannelMusic";
-    public static final String NOTIFY_SONG_ENDS = "NOTIFY_SONG_ENDS";
-    public static final String EXTRA_SONG_ENDS = "EXTRA_SONG_ENDS";
 
     //since we already separate process from Service and Activity we need to create Messenger to communicate
     //between them:
@@ -43,8 +42,19 @@ public class PlayerService extends Service {
         //to the documentation about Notification.
         //Also this builder requires min SDK of 26 thus I need to change the gradle for app:
 
-        Notification.Builder notificationBuilder = new Notification.Builder(this, CHANNEL_ID);
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        //get the intent for the title and artist
+        String title ="";
+        String artist ="";
+        if (intent.getParcelableExtra(MainActivity.EXTRA_SONG) != null) {
+            Song song = intent.getParcelableExtra(MainActivity.EXTRA_SONG);
+            title = song.getTitle();
+            artist = song.getArtist();
+        }
+
+        Notification.Builder notificationBuilder = new Notification.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_queue_music_white)
+                .setContentTitle(title)
+                .setContentText(artist);
         Notification notification = notificationBuilder.build();
 
 

@@ -118,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
                 if (mBound){
 
                     Intent intent = new Intent(MainActivity.this, PlayerService.class);
+                    //send the song object to the PlayerService
+                    intent.putExtra(EXTRA_SONG, Playlist.songs[0]);
                     startService(intent);
 
                     Message message = Message.obtain();
